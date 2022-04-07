@@ -3,15 +3,15 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands.core import command
 
-class ModerationCmds(commands.Cog):
+class Moderation(commands.Cog):
 
     def __init__(self, client):
         self.client = client
 
     @commands.command()
-    @commands.has_permissions(kick_members=True)
+    @commands.has_permissions(kick_members = True)
     async def kick(self, ctx, member : discord.Member, *, reason=None):
-        await member.kick(reason=reason)
+        await member.kick(reason = reason)
         await ctx.send(f"{member} has been booted")
 
     class DurationConverter(commands.Converter):
@@ -22,10 +22,10 @@ class ModerationCmds(commands.Cog):
             if amount.isdigit() and unit in ["m", "h", "d"]:
                 return (int(amount), unit)
 
-            raise commands.BadArgument(message="Not a valid amount of time")
+            raise commands.BadArgument(message = "Not a valid amount of time")
 
     @commands.command()
-    @commands.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members = True)
     async def tempban(self, ctx, member: commands.MemberConverter, duration: DurationConverter):
 
         multiplier = {"m": 60, "h" : 3600, "d": 86400}
@@ -68,4 +68,4 @@ class ModerationCmds(commands.Cog):
         await ctx.channel.purge(limit=amount)
 
 def setup(client):
-    client.add_cog(ModerationCmds(client))
+    client.add_cog(Moderation(client))

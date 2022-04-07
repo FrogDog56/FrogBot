@@ -6,7 +6,7 @@ from discord.ext import commands, tasks
 from itertools import cycle
 
 def get_prefix(client, message):
-    with open("bot.main\prefixes.json", "r") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "r") as f:
         prefixes = json.load(f)
 
     return prefixes[str(message.guild.id)]
@@ -28,7 +28,7 @@ async def reload(ctx, extension):
     client.unload_extension(f"cogs.{extension}")
     client.load_extension(f"cogs.{extension}")
 
-for filename in os.listdir("./bot.main/cogs"):
+for filename in os.listdir(f"{os.getcwd()}/cogs"):
     if filename.endswith(".py"):
         client.load_extension(f"cogs.{filename[:-3]}")
 
@@ -40,36 +40,36 @@ async def on_ready():
 
 @tasks.loop(seconds=7)
 async def change_status():
-    await client.change_presence(activity=discord.Game(next(stat)))
+    await client.change_presence(activity = discord.Game(next(stat)))
 
 @client.event
 async def on_guild_join(guild):
-    with open("bot.main\prefixes.json", "r") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "r") as f:
         prefixes = json.load(f)
 
     prefixes[str(guild.id)] = "."
 
-    with open("bot.main\prefixes.json", "w") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "w") as f:
         json.dump(prefixes, f, indent=2)
 
 @client.event
 async def on_guild_remove(guild):
-    with open("bot.main\prefixes.json", "r") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "r") as f:
         prefixes = json.load(f)
 
     prefixes.pop(str(guild.id))
 
-    with open("bot.main\prefixes.json", "w") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "w") as f:
         json.dump(prefixes, f, indent=2)
 
 @client.command()
 async def changeprefix(ctx, prefix):
-    with open("bot.main\prefixes.json", "r") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "r") as f:
         prefixes = json.load(f)
 
     prefixes[str(ctx.guild.id)] = prefix
 
-    with open("bot.main\prefixes.json", "w") as f:
+    with open(f"{os.getcwd()}\prefixes.json", "w") as f:
         json.dump(prefixes, f, indent=2)
 
     await ctx.send(f"Prefix was successfully changed to: {prefix}")
@@ -90,5 +90,4 @@ async def on_member_remove(member):
     channel = guild.get_channel(0000000000000000)
     await channel.send(f"{member.mention} has left the server")
 
-
-client.run("inset bot token")
+client.run("token")
